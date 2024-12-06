@@ -1,0 +1,133 @@
+/* General Styling */
+body {
+    background-color: #e8f1f5; /* Light blue background for freshness */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern sans-serif font */
+    color: #333; /* Standard text color */
+    margin: 0;
+    padding: 0;
+}
+
+/* Header and Main Titles */
+h1, h2 {
+    color: #003366; /* Deep blue for headings */
+    margin-bottom: 1rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.8rem;
+    margin-top: 1rem;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Form Styling */
+form {
+    padding: 1.5rem;
+    background-color: #ffffff; /* White form background for contrast */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Deeper shadow for depth */
+    margin-bottom: 2rem;
+    border: 1px solid #ddd; /* Light border for subtle definition */
+}
+
+/* Input Fields */
+input[type="file"], input[type="text"] {
+    margin: 1rem 0;
+    padding: 0.7rem;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    color: #003366;
+    background-color: #f8f8f8; /* Light grey input background */
+}
+
+/* Buttons */
+.btn {
+    font-size: 1.1rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: block;
+    width: 100%;
+    margin-top: 0.5rem;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #007bff; /* Primary button color */
+    color: #fff;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        transform: scale(1.05); /* Slight zoom effect on hover */
+    }
+
+.btn-success {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+}
+
+    .btn-success:hover {
+        background-color: #1e7e34;
+        transform: scale(1.05); /* Slight zoom effect on hover */
+    }
+
+/* Containers and Layout */
+.container {
+    max-width: 900px;
+    margin: 2rem auto; /* Center the container */
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); /* Enhanced shadow for a more professional feel */
+}
+
+/* Footer */
+.footer {
+    background-color: #003366; /* Dark blue footer */
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+/* Link Styles */
+a {
+    color: #0056b3; /* Matching link color with hover */
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+/* Centering and Flexbox */
+.text-center {
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem; /* Adds space between columns */
+}
+
+.col-md-6 {
+    flex: 1;
+    padding: 1rem;
+    background-color: #f0f8ff; /* Light blue background for columns */
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}

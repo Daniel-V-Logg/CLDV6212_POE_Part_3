@@ -1,0 +1,106 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\danie\\OneDrive\\Desktop\\2024\\Semester 2\\CLDV6212\\POE\\Part 3\\ST10310998_CLDV6212_POE_ Part_3\\ST10310998_CLDV6212_POE_ Part_1.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\danie\\OneDrive\\Desktop\\2024\\Semester 2\\CLDV6212\\POE\\Part 3\\ST10310998_CLDV6212_POE_ Part_3\\ST10310998_CLDV6212_POE_ Part_1.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\danie\\OneDrive\\Desktop\\2024\\Semester 2\\CLDV6212\\POE\\Part 3\\ST10310998_CLDV6212_POE_ Part_3\\ST10310998_CLDV6212_POE_ Part_1.csproj",
+        "projectName": "ST10310998_CLDV6212_POE_ Part_1",
+        "projectPath": "C:\\Users\\danie\\OneDrive\\Desktop\\2024\\Semester 2\\CLDV6212\\POE\\Part 3\\ST10310998_CLDV6212_POE_ Part_3\\ST10310998_CLDV6212_POE_ Part_1.csproj",
+        "packagesPath": "C:\\Users\\danie\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\danie\\OneDrive\\Desktop\\2024\\Semester 2\\CLDV6212\\POE\\Part 3\\ST10310998_CLDV6212_POE_ Part_3\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\danie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Azure.Data.Tables": {
+              "target": "Package",
+              "version": "[12.9.0, )"
+            },
+            "Azure.Storage.Blobs": {
+              "target": "Package",
+              "version": "[12.21.2, )"
+            },
+            "Azure.Storage.Files.Shares": {
+              "target": "Package",
+              "version": "[12.19.1, )"
+            },
+            "Azure.Storage.Queues": {
+              "target": "Package",
+              "version": "[12.19.1, )"
+            },
+            "Microsoft.Azure.Storage.Blob": {
+              "target": "Package",
+              "version": "[11.2.3, )"
+            },
+            "Microsoft.Azure.Storage.Queue": {
+              "target": "Package",
+              "version": "[11.2.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<section class="contact-us py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Contact Us</h2>
+        <p class="text-center text-muted">We’re here to help! Fill out the form below, and we’ll get back to you shortly.</p>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form id="contactForm" onsubmit="submitContactForm(event)">
+                    <div class="form-group mb-3">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" class="form-control" placeholder="Enter your name" required />
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="surname">Surname</label>
+                        <input type="text" id="surname" class="form-control" placeholder="Enter your surname" required />
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email" required />
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="description">How can we help?</label>
+                        <textarea id="description" class="form-control" rows="5" placeholder="Describe your issue or question" required></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    async function submitContactForm(event) {
+        event.preventDefault();
+
+        const contactData = {
+            name: document.getElementById('name').value,
+            surname: document.getElementById('surname').value,
+            email: document.getElementById('email').value,
+            description: document.getElementById('description').value,
+        };
+
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(contactData),
+            });
+
+            if (response.ok) {
+                alert('Thank you for contacting us! We’ll get back to you soon.');
+                document.getElementById('contactForm').reset();
+            } else {
+                alert('Something went wrong. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error submitting contact form:', error);
+            alert('An error occurred. Please try again later.');
+        }
+    }
+</script>
