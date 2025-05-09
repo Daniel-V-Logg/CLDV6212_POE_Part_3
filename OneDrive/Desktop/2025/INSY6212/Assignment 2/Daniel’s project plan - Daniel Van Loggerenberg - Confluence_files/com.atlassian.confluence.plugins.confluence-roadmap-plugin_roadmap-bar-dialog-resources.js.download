@@ -1,0 +1,1247 @@
+WRMCB=function(e){var c=console;if(c&&c.log&&c.error){c.log('Error running batched script.');c.error(e);}}
+;
+try {
+/* module-key = 'com.atlassian.confluence.plugins.confluence-roadmap-plugin:roadmap-bar-dialog-resources', location = 'view/roadmap-editor/bar-dialog/bar-dialog-templates.soy' */
+// This file was automatically generated from bar-dialog-templates.soy.
+// Please don't edit this file by hand.
+
+/**
+ * @fileoverview Templates in namespace Confluence.Templates.Roadmap.
+ */
+
+if (typeof Confluence == 'undefined') { var Confluence = {}; }
+if (typeof Confluence.Templates == 'undefined') { Confluence.Templates = {}; }
+if (typeof Confluence.Templates.Roadmap == 'undefined') { Confluence.Templates.Roadmap = {}; }
+
+
+Confluence.Templates.Roadmap.barDialog = function(opt_data, opt_ignored) {
+  var output = '';
+  var hasPageLink__soy3 = opt_data.bar.pageLink != null && opt_data.bar.pageLink.id != null;
+  output += '<h3 id="bar-title" class="editable-field">' + soy.$$escapeHtml(opt_data.bar.title) + '</h3><div class="information"><div class="bar-page-link-wrapper">' + ((opt_data.linkPageEditable) ? '<div class="link-update-page ' + ((hasPageLink__soy3) ? 'hidden-field' : '') + '"><a href="#">' + soy.$$escapeHtml('Link page') + '</a></div>' : '') + '<div class="bar-page-link editable-field ' + ((! hasPageLink__soy3) ? 'hidden-field' : '') + '">' + ((hasPageLink__soy3) ? Confluence.Templates.Roadmap.buildPageLink({pageLink: opt_data.bar.pageLink, isEditMode: opt_data.renderOption.isEditMode}) : '') + '</div>' + ((opt_data.linkPageEditable) ? '<div class="link-new-page' + ((hasPageLink__soy3) ? ' hidden-field' : '') + '"><span class=\'page-link-separator\'>\u2022</span><a href="#">' + soy.$$escapeHtml('Create page') + '</a></div>' : '') + '</div><div class="clear"></div><div class="bar-description editable-field">' + soy.$$filterNoAutoescape(opt_data.bar.description) + '</div></div>' + ((opt_data.renderOption.isEditMode) ? '<div class="inner">' + aui.buttons.button({id: 'delete-button', text: 'Delete bar', type: 'link'}) + '</div>' : '');
+  return output;
+};
+if (goog.DEBUG) {
+  Confluence.Templates.Roadmap.barDialog.soyTemplateName = 'Confluence.Templates.Roadmap.barDialog';
+}
+
+
+Confluence.Templates.Roadmap.buildPageLink = function(opt_data, opt_ignored) {
+  return '<a id="roadmap-page-link" href=' + soy.$$escapeHtml("/wiki") + '/pages/viewpage.action?pageId=' + soy.$$escapeHtml(opt_data.pageLink.id) + ' ' + ((opt_data.isEditMode) ? 'target=\'_blank\'' : '') + ' class=\'confluence-link content-type-' + soy.$$escapeHtml(opt_data.pageLink.type) + '\'><span class="link-page-title">' + soy.$$escapeHtml(opt_data.pageLink.title) + '</span></a>';
+};
+if (goog.DEBUG) {
+  Confluence.Templates.Roadmap.buildPageLink.soyTemplateName = 'Confluence.Templates.Roadmap.buildPageLink';
+}
+
+
+Confluence.Templates.Roadmap.inlineEditSaveButton = function(opt_data, opt_ignored) {
+  return '' + aui.buttons.button({id: 'inline-edit-save', iconType: 'aui', extraClasses: 'aui-button-compact', text: '', extraAttributes: {title: 'Save'}, iconClass: 'aui-icon-small aui-iconfont-success'});
+};
+if (goog.DEBUG) {
+  Confluence.Templates.Roadmap.inlineEditSaveButton.soyTemplateName = 'Confluence.Templates.Roadmap.inlineEditSaveButton';
+}
+
+
+Confluence.Templates.Roadmap.inlineEditCancelButton = function(opt_data, opt_ignored) {
+  return '' + aui.buttons.button({id: 'inline-edit-cancel', iconType: 'aui', extraClasses: 'aui-button-compact', text: '', extraAttributes: {title: 'Cancel'}, iconClass: 'aui-icon-small aui-iconfont-close-dialog'});
+};
+if (goog.DEBUG) {
+  Confluence.Templates.Roadmap.inlineEditCancelButton.soyTemplateName = 'Confluence.Templates.Roadmap.inlineEditCancelButton';
+}
+
+}catch(e){WRMCB(e)};
+;
+try {
+/* module-key = 'com.atlassian.confluence.plugins.confluence-roadmap-plugin:roadmap-bar-dialog-resources', location = 'view/roadmap-editor/bar-dialog/roadmap-editinplace.js' */
+/**
+
+ A jQuery edit in place plugin
+
+ Version 2.3.0
+
+ Authors:
+ Dave Hauenstein
+ Martin Häcker <spamfaenger [at] gmx [dot] de>
+
+ Project home:
+ http://code.google.com/p/jquery-in-place-editor/
+
+ Patches with tests welcomed! For guidance see the tests  </spec/unit/>. To submit, attach them to the bug tracker.
+
+ License:
+ This source file is subject to the BSD license bundled with this package.
+ Available online: {@link http://www.opensource.org/licenses/bsd-license.php}
+ If you did not receive a copy of the license, and are unable to obtain it,
+ learn to use a search engine.
+
+ * Modified by Atlassian - MBA
+ */
+
+(function ($) {
+
+    $.fn.editInPlace = function (options) {
+
+        var settings = $.extend({}, $.fn.editInPlace.defaults, options);
+        assertMandatorySettingsArePresent(settings);
+        preloadImage(settings.saving_image);
+
+        return this.each(function () {
+            var dom = $(this);
+            // This won't work with live queries as there is no specific element to attach this
+            // one way to deal with this could be to store a reference to self and then compare that in click?
+            if (dom.data('editInPlace'))
+                return; // already an editor here
+            dom.data('editInPlace', true);
+
+            new InlineEditor(settings, dom).init();
+        });
+    };
+
+/// Switch these through the dictionary argument to $(aSelector).editInPlace(overideOptions)
+/// Required Options: Either url or callback, so the editor knows what to do with the edited values.
+    $.fn.editInPlace.defaults = {
+        url: "", // string: POST URL to send edited content
+        bg_over: "#ffc", // string: background color of hover of unactivated editor
+        bg_out: "transparent", // string: background color on restore from hover
+        hover_class: "",  // string: class added to root element during hover. Will override bg_over and bg_out
+        form_extra_classes: [],  // string array: classes added to form element - MBA
+        show_buttons: false, // boolean: will show the buttons: cancel or save; will automatically cancel out the onBlur functionality
+        save_button: '<button class="inplace_save">Save</button>', // string: image button tag to use as “Save” button
+        cancel_button: '<button class="inplace_cancel">Cancel</button>', // string: image button tag to use as “Cancel” button
+        params: "", // string: example: first_name=dave&last_name=hauenstein extra paramters sent via the post request to the server
+        field_type: "text", // string: "text", "textarea", or "select";  The type of form field that will appear on instantiation
+        field_extra_classes: [], // string array: classes added to field element - MBA
+        default_text: "(Click here to add text)", // string: text to show up if the element that has this functionality is empty
+        use_html: false, // boolean, set to true if the editor should use jQuery.fn.html() to extract the value to show from the dom node
+        textarea_rows: 10, // integer: set rows attribute of textarea, if field_type is set to textarea. Use CSS if possible though
+        textarea_cols: 25, // integer: set cols attribute of textarea, if field_type is set to textarea. Use CSS if possible though
+        select_text: "Choose new value", // string: default text to show up in select box
+        select_options: "", // string or array: Used if field_type is set to 'select'. Can be comma delimited list of options 'textandValue,text:value', Array of options ['textAndValue', 'text:value'] or array of arrays ['textAndValue', ['text', 'value']]. The last form is especially usefull if your labels or values contain colons)
+        text_size: null, // integer: set cols attribute of text input, if field_type is set to text. Use CSS if possible though
+
+        // Specifying callback_skip_dom_reset will disable all saving_* options
+        saving_text: undefined, // string: text to be used when server is saving information. Example "Saving..."
+        saving_image: "", // string: uses saving text specify an image location instead of text while server is saving
+        saving_animation_color: 'transparent', // hex color string, will be the color the pulsing animation during the save pulses to. Note: Only works if jquery-ui is loaded
+
+        value_required: false, // boolean: if set to true, the element will not be saved unless a value is entered
+        disable_submit_when_empty: false, // boolean: if set to true, the submit function will be disabled until a value is entered - MBA
+        element_id: "element_id", // string: name of parameter holding the id or the editable
+        update_value: "update_value", // string: name of parameter holding the updated/edited value
+        original_value: 'original_value', // string: name of parameter holding the updated/edited value
+        original_html: "original_html", // string: name of parameter holding original_html value of the editable /* DEPRECATED in 2.2.0 */ use original_value instead.
+        save_if_nothing_changed: false,  // boolean: submit to function or server even if the user did not change anything
+        on_blur: "save", // string: "save" or null; what to do on blur; will be overridden if show_buttons is true
+        cancel: "", // string: if not empty, a jquery selector for elements that will not cause the editor to open even though they are clicked. E.g. if you have extra buttons inside editable fields
+
+        // All callbacks will have this set to the DOM node of the editor that triggered the callback
+
+        callback: null, // function: function to be called when editing is complete; cancels ajax submission to the url param. Prototype: function(idOfEditor, enteredText, orinalHTMLContent, settingsParams, callbacks). The function needs to return the value that should be shown in the dom. Returning undefined means cancel and will restore the dom and trigger an error. callbacks is a dictionary with two functions didStartSaving and didEndSaving() that you can use to tell the inline editor that it should start and stop any saving animations it has configured. /* DEPRECATED in 2.1.0 */ Parameter idOfEditor, use $(this).attr('id') instead
+        callback_skip_dom_reset: false, // boolean: set this to true if the callback should handle replacing the editor with the new value to show
+        success: null, // function: this function gets called if server responds with a success. Prototype: function(newEditorContentString)
+        error: null, // function: this function gets called if server responds with an error. Prototype: function(request)
+        error_sink: function (idOfEditor, errorString) {
+            alert(errorString);
+        }, // function: gets id of the editor and the error. Make sure the editor has an id, or it will just be undefined. If set to null, no error will be reported. /* DEPRECATED in 2.1.0 */ Parameter idOfEditor, use $(this).attr('id') instead
+        preinit: null, // function: this function gets called after a click on an editable element but before the editor opens. If you return false, the inline editor will not open. Prototype: function(currentDomNode). DEPRECATED in 2.2.0 use delegate shouldOpenEditInPlace call instead
+        postclose: null, // function: this function gets called after the inline editor has closed and all values are updated. Prototype: function(currentDomNode). DEPRECATED in 2.2.0 use delegate didCloseEditInPlace call instead
+        delegate: null, // object: if it has methods with the name of the callbacks documented below in delegateExample these will be called. This means that you just need to impelment the callbacks you are interested in.
+
+        isAutoCompleteField: false // MBA: this property should be TRUE when your field is autocomplete (has dropdown) to avoid blur event fired after select from dropdown
+    };
+
+// Lifecycle events that the delegate can implement
+// this will always be fixed to the delegate
+    var delegateExample = {
+        // called while opening the editor.
+        // return false to prevent editor from opening
+        shouldOpenEditInPlace: function (aDOMNode, aSettingsDict, triggeringEvent) {
+        },
+        // return content to show in inplace editor
+        willOpenEditInPlace: function (aDOMNode, aSettingsDict) {
+        },
+        didOpenEditInPlace: function (aDOMNode, aSettingsDict) {
+        },
+
+        // called while closing the editor
+        // return false to prevent the editor from closing
+        shouldCloseEditInPlace: function (aDOMNode, aSettingsDict, triggeringEvent) {
+        },
+        // return value will be shown during saving
+        willCloseEditInPlace: function (aDOMNode, aSettingsDict) {
+        },
+        didCloseEditInPlace: function (aDOMNode, aSettingsDict) {
+        },
+
+        missingCommaErrorPreventer: ''
+    };
+
+
+    function InlineEditor(settings, dom) {
+        this.settings = settings;
+        this.dom = dom;
+        this.originalValue = null;
+        this.didInsertDefaultText = false;
+        this.shouldDelayReinit = false;
+        this.pageLinkHTML = settings.pageLinkHTML;
+        this.isEditMode = settings.isEditMode;
+
+        this.addRemoveDialogOnClickListener(this.isEditMode);
+    };
+
+    $.extend(InlineEditor.prototype, {
+
+        init: function () {
+            this.setDefaultTextIfNeccessary();
+            this.connectOpeningEvents();
+        },
+
+        reinit: function () {
+            if (this.shouldDelayReinit)
+                return;
+
+            this.triggerCallback(this.settings.postclose, /* DEPRECATED in 2.1.0 */ this.dom);
+            this.triggerDelegateCall('didCloseEditInPlace');
+
+            this.markEditorAsInactive();
+            this.connectOpeningEvents();
+        },
+
+        setDefaultTextIfNeccessary: function () {
+            if ('' !== this.dom.html())
+                return;
+
+            this.dom.html(this.settings.default_text);
+            this.didInsertDefaultText = true;
+        },
+
+        connectOpeningEvents: function () {
+            var that = this;
+            this.dom
+                .bind('mouseenter.editInPlace', function () {
+                    that.addHoverEffect();
+                })
+                .bind('mouseleave.editInPlace', function () {
+                    that.removeHoverEffect();
+                })
+                .bind('click.editInPlace', function (anEvent) {
+                    that.openEditor(anEvent);
+                });
+        },
+
+        disconnectOpeningEvents: function () {
+            // prevent re-opening the editor when it is already open
+            this.dom.unbind('.editInPlace');
+        },
+
+        addHoverEffect: function () {
+            if (this.settings.hover_class)
+                this.dom.addClass(this.settings.hover_class);
+            else
+                this.dom.css("background-color", this.settings.bg_over);
+        },
+
+        removeHoverEffect: function () {
+            if (this.settings.hover_class)
+                this.dom.removeClass(this.settings.hover_class);
+            else
+                this.dom.css("background-color", this.settings.bg_out);
+        },
+
+        openEditor: function (anEvent) {
+            if (!this.shouldOpenEditor(anEvent))
+                return;
+
+            this.disconnectOpeningEvents();
+            this.removeHoverEffect();
+            this.removeInsertedDefaultTextIfNeccessary();
+            this.saveOriginalValue();
+            this.markEditorAsActive();
+            this.replaceContentWithEditor();
+            this.setInitialValue();
+            this.workAroundMissingBlurBug();
+            this.connectClosingEventsToEditor();
+            this.triggerDelegateCall('didOpenEditInPlace');
+        },
+
+        shouldOpenEditor: function (anEvent) {
+            if (this.isClickedObjectCancelled(anEvent.target))
+                return false;
+
+            if (false === this.triggerCallback(this.settings.preinit, /* DEPRECATED in 2.1.0 */ this.dom))
+                return false;
+
+            if (false === this.triggerDelegateCall('shouldOpenEditInPlace', true, anEvent))
+                return false;
+
+            /* MBA: Should return false to get IE9 works well when click on an Link. */
+            if (this.settings.isAutoCompleteField && $(anEvent.target).hasClass('link-page-title')) {
+                return false;
+            }
+
+            return true;
+        },
+
+        removeInsertedDefaultTextIfNeccessary: function () {
+            if (!this.didInsertDefaultText
+                || this.dom.html() !== this.settings.default_text)
+                return;
+
+            this.dom.html('');
+            this.didInsertDefaultText = false;
+        },
+
+        removeDialog: function () {
+            $('#inline-dialog-roadmap-dialog').remove();
+        },
+
+        // Fixes bug where dialog doesn't close after navigating away to linked page in view mode
+        addRemoveDialogOnClickListener: function (isEditMode) {
+            if(!isEditMode) {
+                $("#roadmap-page-link").on("click", this.removeDialog);
+            }
+        },
+
+        isClickedObjectCancelled: function (eventTarget) {
+            if (!this.settings.cancel)
+                return false;
+
+            var eventTargetAndParents = $(eventTarget).parents().andSelf();
+            var elementsMatchingCancelSelector = eventTargetAndParents.filter(this.settings.cancel);
+            return 0 !== elementsMatchingCancelSelector.length;
+        },
+
+        saveOriginalValue: function () {
+            this.originalValue = trim(this.dom.text());
+        },
+
+        restoreOriginalValue: function () {
+            this.setClosedEditorContent(this.originalValue);
+        },
+
+        setClosedEditorContent: function (aValue) {
+            aValue = aValue || this.settings.default_text; // MBA - rebinding the default text if value is empty
+
+            // Fixes VULN-1095363 since we're not putting user supplied info directly into the page with .html().
+            // This also fixes a bug where it doesn't show you the linked page anymore after you try to edit and click out of the edit.
+            if (this.settings.use_html) {
+                this.dom.html(this.pageLinkHTML);
+                this.addRemoveDialogOnClickListener(this.isEditMode);
+            }
+            else
+                this.dom.text(aValue);
+        },
+
+        workAroundMissingBlurBug: function () {
+            // Strangely, all browser will forget to send a blur event to an input element
+            // when another one is created and selected programmatically. (at least under some circumstances).
+            // This means that if another inline editor is opened, existing inline editors will _not_ close
+            // if they are configured to submit when blurred.
+
+            // Using parents() instead document as base to workaround the fact that in the unittests
+            // the editor is not a child of window.document but of a document fragment
+            var ourInput = this.dom.find(':input');
+            this.dom.parents(':last').find('.editInPlace-active :input').not(ourInput).blur();
+        },
+
+        replaceContentWithEditor: function () {
+            // start - MBA - provide extra classes for form
+            /*
+            var buttons_html  = (this.settings.show_buttons) ? this.settings.save_button + ' ' + this.settings.cancel_button : '';
+            var editorElement = this.createEditorElement(); // needs to happen before anything is replaced
+            insert the new in place form after the element they click, then empty out the original element
+            this.dom.html('<form class="inplace_form" style="display: inline; margin: 0; padding: 0;"></form>')
+                .find('form')
+                    .append(editorElement)
+                    .append(buttons_html);
+            */
+            var editorElement = this.createEditorElement(); // needs to happen before anything is replaced
+            /* insert the new in place form after the element they click, then empty out the original element */
+            var formClasses = "inplace_form";
+            if (this.settings.form_extra_classes instanceof Array) {
+                formClasses = formClasses + " " + this.settings.form_extra_classes.join(' ');
+            }
+            this.dom.html('<form class="' + formClasses + '" style="display: inline; margin: 0; padding: 0;"></form>');
+            var form = this.dom.find('form');
+            form.append(editorElement);
+            if (this.settings.show_buttons) {
+                var buttons = $('<div class="inline-edit-buttons"></div>');
+                var saveButton = $(this.settings.save_button);
+                saveButton.addClass("inplace_save");
+                buttons.append(saveButton);
+                var cancelButton = $(this.settings.cancel_button);
+                cancelButton.addClass("inplace_cancel");
+                buttons.append(cancelButton);
+                form.append(buttons);
+            }
+            // end - MBA
+        },
+
+        createEditorElement: function () {
+            if (-1 === $.inArray(this.settings.field_type, ['text', 'textarea', 'select']))
+                throw "Unknown field_type <fnord>, supported are 'text', 'textarea' and 'select'";
+
+            var editor = null;
+            if ("select" === this.settings.field_type)
+                editor = this.createSelectEditor();
+            else if ("text" === this.settings.field_type)
+                editor = $('<input type="text" ' + this.inputNameAndClass()
+                    + ' size="' + this.settings.text_size + '" />');
+            else if ("textarea" === this.settings.field_type)
+                editor = $('<textarea ' + this.inputNameAndClass()
+                    + ' rows="' + this.settings.textarea_rows + '" '
+                    + ' cols="' + this.settings.textarea_cols + '" />');
+
+            return editor;
+        },
+
+        setInitialValue: function () {
+            var initialValue = this.triggerDelegateCall('willOpenEditInPlace', this.originalValue);
+            var editor = this.dom.find(':input');
+            editor.val(initialValue);
+
+            // Workaround for select fields which don't contain the original value.
+            // Somehow the browsers don't like to select the instructional choice (disabled) in that case
+            if (editor.val() !== initialValue)
+                editor.val(''); // selects instructional choice
+        },
+
+        inputNameAndClass: function () {
+            // start MBA - provide extra classes for field
+            //return ' name="inplace_value" class="inplace_field" ';
+            var fieldClasses = "inplace_field";
+            if (this.settings.field_extra_classes instanceof Array) {
+                fieldClasses = fieldClasses + " " + this.settings.field_extra_classes.join(' ');
+            }
+            return ' name="inplace_value" class="' + fieldClasses + '"';
+            // end MBA
+        },
+
+        createSelectEditor: function () {
+            var editor = $('<select' + this.inputNameAndClass() + '>'
+                + '<option disabled="true" value="">' + this.settings.select_text + '</option>'
+                + '</select>');
+
+            var optionsArray = this.settings.select_options;
+            if (!$.isArray(optionsArray))
+                optionsArray = optionsArray.split(',');
+
+            for (var i = 0; i < optionsArray.length; i++) {
+                var currentTextAndValue = optionsArray[i];
+                if (!$.isArray(currentTextAndValue))
+                    currentTextAndValue = currentTextAndValue.split(':');
+
+                var value = trim(currentTextAndValue[1] || currentTextAndValue[0]);
+                var text = trim(currentTextAndValue[0]);
+
+                var option = $('<option>').val(value).text(text);
+                editor.append(option);
+            }
+
+            return editor;
+        },
+
+        connectClosingEventsToEditor: function () {
+            var that = this;
+
+            function cancelEditorAction(anEvent) {
+                /**
+                 * MBA: check to prevent blur when field is dropdown
+                 **/
+                if (!that.settings.isAutoCompleteField) {
+                    that.handleCancelEditor(anEvent);
+                }
+
+                return false; // stop event bubbling
+            }
+
+            function saveEditorAction(anEvent) {
+                that.handleSaveEditor(anEvent);
+                return false; // stop event bubbling
+            }
+
+            var form = this.dom.find("form");
+
+            form.find(".inplace_field").focus().select();
+            form.find(".inplace_cancel").click(cancelEditorAction);
+            form.find(".inplace_save").click(saveEditorAction);
+
+            if (!this.settings.show_buttons) {
+                // TODO: Firefox has a bug where blur is not reliably called when focus is lost
+                //       (for example by another editor appearing)
+                if ("save" === this.settings.on_blur)
+                    form.find(".inplace_field").blur(saveEditorAction);
+                else
+                    form.find(".inplace_field").blur(cancelEditorAction);
+
+                // start MBA - fix submit
+                // workaround for msie & firefox bug where it won't submit on enter if no button is shown
+                // if ($.browser.mozilla || $.browser.msie)
+                //	this.bindSubmitOnEnterInInput();
+                // end MBA
+            }
+
+            form.keyup(function (anEvent) {
+                // allow canceling with escape
+                var escape = 27;
+                if (escape === anEvent.which)
+                    return cancelEditorAction();
+            });
+
+            // start - MBA fix submit
+            // workaround for webkit nightlies where they won't submit at all on enter
+            // REFACT: find a way to just target the nightlies
+            //if ($.browser.safari)
+            //	this.bindSubmitOnEnterInInput();
+
+            this.bindInputKeyup();
+            // end - MBA fix submit
+            form.submit(saveEditorAction);
+        },
+
+        bindSubmitOnEnterInInput: function () {
+            if ('textarea' === this.settings.field_type)
+                return; // can't enter newlines otherwise
+
+            var that = this;
+            this.dom.find(':input').keyup(function (event) {
+                var enter = 13;
+                if (enter === event.which)
+                    return that.dom.find('form').submit();
+            });
+        },
+        // start - MBA provide disable submit button when empty
+        bindInputKeyup: function () {
+            if ('textarea' === this.settings.field_type)
+                return; // can't enter newlines otherwise
+
+            var that = this;
+            var inputField = this.dom.find(':input');
+            var saveButton = this.dom.find(".inplace_save");
+            inputField.keyup(function (event) {
+                var enter = 13;
+                if (enter === event.which)
+                    return that.dom.find('form').submit();
+                else if (that.settings.disable_submit_when_empty) {
+                    if ($.trim(inputField.val()).length) {
+                        saveButton.removeAttr('disabled');
+                    } else {
+                        saveButton.attr('disabled', 'disabled');
+                    }
+                }
+            });
+        },
+        // end - MBA
+
+        handleCancelEditor: function (anEvent) {
+            // REFACT: remove duplication between save and cancel
+            if (false === this.triggerDelegateCall('shouldCloseEditInPlace', true, anEvent))
+                return;
+
+            var enteredText = this.dom.find(':input').val();
+            enteredText = this.triggerDelegateCall('willCloseEditInPlace', enteredText);
+
+            this.restoreOriginalValue();
+            // start MBA - update
+            //if (hasContent(enteredText)
+            //	&& ! this.isDisabledDefaultSelectChoice())
+            //	this.setClosedEditorContent(enteredText);
+            // end MBA
+            this.reinit();
+        },
+
+        handleSaveEditor: function (anEvent) {
+            if (false === this.triggerDelegateCall('shouldCloseEditInPlace', true, anEvent))
+                return;
+
+            var enteredText = $.trim(this.dom.find(':input').val()); // MBA - trim & remove spaces
+            enteredText = this.triggerDelegateCall('willCloseEditInPlace', enteredText);
+
+            if (this.isDisabledDefaultSelectChoice()
+                || this.isUnchangedInput(enteredText)) {
+                this.handleCancelEditor(anEvent);
+                return;
+            }
+
+            if (this.didForgetRequiredText(enteredText)) {
+                // start - MBA provide disable submit when empty
+                if (this.settings.disable_submit_when_empty) {
+                    return;
+                }
+                // end - MBA
+                this.handleCancelEditor(anEvent);
+                this.reportError("Error: You must enter a value to save this field");
+                return;
+            }
+
+            this.showSaving(enteredText);
+
+            if (this.settings.callback)
+                this.handleSubmitToCallback(enteredText);
+            else
+                this.handleSubmitToServer(enteredText);
+        },
+
+        didForgetRequiredText: function (enteredText) {
+            return this.settings.value_required
+                && ("" === enteredText
+                    || undefined === enteredText
+                    || null === enteredText);
+        },
+
+        isDisabledDefaultSelectChoice: function () {
+            return this.dom.find('option').eq(0).is(':selected:disabled');
+        },
+
+        isUnchangedInput: function (enteredText) {
+            return !this.settings.save_if_nothing_changed
+                && this.originalValue === enteredText;
+        },
+
+        showSaving: function (enteredText) {
+            if (this.settings.callback && this.settings.callback_skip_dom_reset)
+                return;
+
+            var savingMessage = enteredText;
+            if (hasContent(this.settings.saving_text))
+                savingMessage = this.settings.saving_text;
+            if (hasContent(this.settings.saving_image))
+                // REFACT: alt should be the configured saving message
+                savingMessage = $('<img />').attr('src', this.settings.saving_image).attr('alt', savingMessage);
+            this.dom.html(encodeURIComponent(savingMessage)); // MBA - fix XSS
+        },
+
+        handleSubmitToCallback: function (enteredText) {
+            // REFACT: consider to encode enteredText and originalHTML before giving it to the callback
+            this.enableOrDisableAnimationCallbacks(true, false);
+            var newHTML = this.triggerCallback(this.settings.callback, /* DEPRECATED in 2.1.0 */ this.id(), enteredText, this.originalValue,
+                this.settings.params, this.savingAnimationCallbacks());
+
+            if (this.settings.callback_skip_dom_reset)
+                ; // do nothing
+            else if (undefined === newHTML) {
+                // failure; put original back
+                this.reportError("Error: Failed to save value: " + enteredText);
+                this.restoreOriginalValue();
+            } else {
+                // REFACT: use setClosedEditorContent
+                this.pageLinkHTML = newHTML;
+                this.dom.html(newHTML);
+                this.addRemoveDialogOnClickListener(this.isEditMode);
+            }
+            if (this.didCallNoCallbacks()) {
+                this.enableOrDisableAnimationCallbacks(false, false);
+                this.reinit();
+            }
+        },
+
+        handleSubmitToServer: function (enteredText) {
+            var data = this.settings.update_value + '=' + encodeURIComponent(enteredText)
+                + '&' + this.settings.element_id + '=' + this.dom.attr("id")
+                + ((this.settings.params) ? '&' + this.settings.params : '')
+                + '&' + this.settings.original_html + '=' + encodeURIComponent(this.originalValue) /* DEPRECATED in 2.2.0 */
+                + '&' + this.settings.original_value + '=' + encodeURIComponent(this.originalValue);
+
+            this.enableOrDisableAnimationCallbacks(true, false);
+            this.didStartSaving();
+            var that = this;
+            $.ajax({
+                url: that.settings.url,
+                type: "POST",
+                data: data,
+                dataType: "html",
+                complete: function (request) {
+                    that.didEndSaving();
+                },
+                success: function (html) {
+                    var new_text = html || that.settings.default_text;
+
+                    /* put the newly updated info into the original element */
+                    // FIXME: should be affected by the preferences switch
+                    that.dom.html(new_text);
+                    // REFACT: remove dom parameter, already in this, not documented, should be easy to remove
+                    // REFACT: callback should be able to override what gets put into the DOM
+                    that.triggerCallback(that.settings.success, html);
+                },
+                error: function (request) {
+                    that.dom.html(that.originalHTML); // REFACT: what about a restorePreEditingContent()
+                    if (that.settings.error)
+                        // REFACT: remove dom parameter, already in this, not documented, can remove without deprecation
+                        // REFACT: callback should be able to override what gets entered into the DOM
+                        that.triggerCallback(that.settings.error, request);
+                    else
+                        that.reportError("Failed to save value: " + request.responseText || 'Unspecified Error');
+                }
+            });
+        },
+
+        // Utilities .........................................................
+
+        triggerCallback: function (aCallback /*, arguments */) {
+            if (!aCallback)
+                return; // callback wasn't specified after all
+
+            var callbackArguments = Array.prototype.slice.call(arguments, 1);
+            return aCallback.apply(this.dom[0], callbackArguments);
+        },
+
+        /// defaultReturnValue is only used if the delegate returns undefined
+        triggerDelegateCall: function (aDelegateMethodName, defaultReturnValue, optionalEvent) {
+            // REFACT: consider to trigger equivalent callbacks automatically via a mapping table?
+            if (!this.settings.delegate
+                || !$.isFunction(this.settings.delegate[aDelegateMethodName]))
+                return defaultReturnValue;
+
+            var delegateReturnValue = this.settings.delegate[aDelegateMethodName](this.dom, this.settings, optionalEvent);
+            return (undefined === delegateReturnValue)
+                ? defaultReturnValue
+                : delegateReturnValue;
+        },
+
+        reportError: function (anErrorString) {
+            this.triggerCallback(this.settings.error_sink, /* DEPRECATED in 2.1.0 */ this.id(), anErrorString);
+        },
+
+        // REFACT: this method should go, callbacks should get the dom node itself as an argument
+        id: function () {
+            return this.dom.attr('id');
+        },
+
+        markEditorAsActive: function () {
+            this.dom.addClass('editInPlace-active');
+        },
+
+        markEditorAsInactive: function () {
+            this.dom.removeClass('editInPlace-active');
+        },
+
+        // REFACT: consider rename, doesn't deal with animation directly
+        savingAnimationCallbacks: function () {
+            var that = this;
+            return {
+                didStartSaving: function () {
+                    that.didStartSaving();
+                },
+                didEndSaving: function () {
+                    that.didEndSaving();
+                }
+            };
+        },
+
+        enableOrDisableAnimationCallbacks: function (shouldEnableStart, shouldEnableEnd) {
+            this.didStartSaving.enabled = shouldEnableStart;
+            this.didEndSaving.enabled = shouldEnableEnd;
+        },
+
+        didCallNoCallbacks: function () {
+            return this.didStartSaving.enabled && !this.didEndSaving.enabled;
+        },
+
+        assertCanCall: function (methodName) {
+            if (!this[methodName].enabled)
+                throw new Error('Cannot call ' + methodName + ' now. See documentation for details.');
+        },
+
+        didStartSaving: function () {
+            this.assertCanCall('didStartSaving');
+            this.shouldDelayReinit = true;
+            this.enableOrDisableAnimationCallbacks(false, true);
+
+            this.startSavingAnimation();
+        },
+
+        didEndSaving: function () {
+            this.assertCanCall('didEndSaving');
+            this.shouldDelayReinit = false;
+            this.enableOrDisableAnimationCallbacks(false, false);
+            this.reinit();
+
+            this.stopSavingAnimation();
+        },
+
+        startSavingAnimation: function () {
+            var that = this;
+            this.dom
+                .animate({backgroundColor: this.settings.saving_animation_color}, 400)
+                .animate({backgroundColor: 'transparent'}, 400, 'swing', function () {
+                    // In the tests animations are turned off - i.e they happen instantaneously.
+                    // Hence we need to prevent this from becomming an unbounded recursion.
+                    setTimeout(function () {
+                        that.startSavingAnimation();
+                    }, 10);
+                });
+        },
+
+        stopSavingAnimation: function () {
+            this.dom
+                .stop(true)
+                .css({backgroundColor: ''});
+        },
+
+        missingCommaErrorPreventer: ''
+    });
+
+
+// Private helpers .......................................................
+
+    function assertMandatorySettingsArePresent(options) {
+        // one of these needs to be non falsy
+        if (options.url || options.callback)
+            return;
+
+        throw new Error("Need to set either url: or callback: option for the inline editor to work.");
+    }
+
+    /* preload the loading icon if it is configured */
+    function preloadImage(anImageURL) {
+        if ('' === anImageURL)
+            return;
+
+        var loading_image = new Image();
+        loading_image.src = anImageURL;
+    }
+
+    function trim(aString) {
+        return aString
+            .replace(/^\s+/, '')
+            .replace(/\s+$/, '');
+    }
+
+    function hasContent(something) {
+        if (undefined === something || null === something)
+            return false;
+
+        if (0 === something.length)
+            return false;
+
+        return true;
+    }
+
+})(jQuery);
+
+}catch(e){WRMCB(e)};
+;
+try {
+/* module-key = 'com.atlassian.confluence.plugins.confluence-roadmap-plugin:roadmap-bar-dialog-resources', location = 'view/roadmap-editor/bar-dialog/bar-dialog.js' */
+(function ($, _) {
+    var InlineDialogView = Roadmap.InlineDialogView;
+    Roadmap.BarDialogView = InlineDialogView.extend({
+        events: {
+            'click #delete-button': '_onDeleteClick',
+            'click .link-new-page': '_goToCreateLinkPage',
+            'click .link-update-page': '_goToUpdateLinkPage'
+        },
+
+        initialize: function () {
+            _.bindAll(this, '_onPageLinkOpen', '_onPageLinkSelectCompleted', '_onPageLinkCallback', '_onPageLinkBlur', '_goToCreateLinkPage');
+            this.options.dialogOptions = {
+                width: 260,
+                timelineWidth: this.options.timelineWidth,
+                isSideInlineDialog: true,
+                renderOption: this.options.renderOption,
+                linkPageEditable: this.options.linkPageEditable,
+                createLinkPageCallback: this.options.createLinkPageCallback
+            };
+
+            InlineDialogView.prototype.initialize.call(this, this.options);
+        },
+
+        // Taken from here: https://stackoverflow.com/a/12034334
+        _escapeString: function (string) {
+            var entityMap = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;',
+                '/': '&#x2F;',
+                '`': '&#x60;',
+                '=': '&#x3D;'
+            };
+            return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+                return entityMap[s];
+            });
+        },
+
+        /**
+         * Get Bar dialog content
+         * @param {element} element The inline dialog element.
+         * @param {function} showDialog A function that shows the inline dialog.
+         */
+        _getContent: function (element) {
+            // Fixes https://asecurityteam.atlassian.net/browse/VULN-1105619
+            // Sanitize the id in case we somehow get some malformed ID that the user can set via the /content API
+            const sanitizedId = this.model.attributes.pageLink.id ? {id: this._escapeString(this.model.attributes.pageLink.id)} : {};
+
+            // This takes care of any further usages of this.model.attributes.pageLink.id since original object gets
+            // assigned with sanitized id value
+            Object.assign(this.model.attributes.pageLink, sanitizedId);
+
+            element.html(Confluence.Templates.Roadmap.barDialog({
+                bar: _.extend({}, this.model.attributes, {
+                    description: AJS.escapeHtml(this.model.attributes.description).replace(/\r?\n/g, '<br />')
+                }),
+                renderOption: this.options.dialogOptions.renderOption,
+                linkPageEditable: this.options.dialogOptions.linkPageEditable
+            }));
+        },
+
+        _onBeforeShow: function () {
+            this.fields = this._getFields();
+
+            this._setupInlineEdit();
+            this._addEvents();
+        },
+
+        _getFields: function () {
+            return {
+                $title: this.$el.find('#bar-title'),
+                $description: this.$el.find('.bar-description'),
+                $pageLink: this.$el.find('.bar-page-link'),
+                $pageLinkNew: this.$el.find('.link-new-page'),
+                $pageLinkUpdate: this.$el.find('.link-update-page')
+            };
+        },
+
+        _setupInlineEdit: function () {
+            var me = this;
+            var fields = this.fields;
+            var editInplaceOption = this.options.dialogOptions.renderOption.editInplace;
+            var defaultOption = {
+                form_extra_classes: ['aui'],
+                hover_class: 'editable-field-hover aui-icon-small aui-iconfont-edit',
+                field_extra_classes: ['text'],
+                show_buttons: true,
+                save_button: Confluence.Templates.Roadmap.inlineEditSaveButton(),
+                cancel_button: Confluence.Templates.Roadmap.inlineEditCancelButton(),
+                error_sink: null,
+                use_html: true,
+                default_text: "Click to add description.",
+                delegate: {
+                    shouldOpenEditInPlace: function () {
+                        me.$el.find(".inplace_cancel").trigger('click'); // this function will prevent showing two inline edit instances at the same time
+                    },
+                    didCloseEditInPlace: function () {
+                        // edit-inplace still need to rebind original value.
+                        // So use setTimeout here to make sure everything was redraw before refresh the inline dialog
+                        setTimeout(function () {
+                            me.refresh();
+                        }, 0);
+                    }
+                }
+            };
+
+            // Setup Title
+            editInplaceOption.title && fields.$title.editInPlace(
+                $.extend(true, {}, defaultOption, {
+                    callback: function (elementId, enteredText) {
+                        me.options.updateTitle(enteredText);
+                        return AJS.escapeHtml(enteredText);
+                    },
+                    value_required: true,
+                    disable_submit_when_empty: true,
+                    delegate: {
+                        willOpenEditInPlace: function () {
+                            me.refresh();
+                            fields.$title.find('.text').attr('maxlength', Roadmap.BarDialog.MAX_LENGTH_TITLE); // set maxlength for model browser
+                        }
+                    }
+                })
+            );
+
+            // format italic if description is empty when the dialog show up
+            ($.trim(fields.$description.text()) === '') ? fields.$description.addClass('empty-field') : fields.$description.removeClass('empty-field');
+
+            // Setup Description
+            var descriptionOption = $.extend(true, {}, defaultOption, {
+                field_type: 'textarea',
+                field_extra_classes: ['textarea'],
+                value_required: false,
+                save_if_nothing_changed: true,
+                callback: function (elementId, enteredText) {
+                    enteredText = $.trim(enteredText);
+                    me.options.updateDescription(enteredText);
+
+                    // format italic if description is empty after editing
+                    if (enteredText === '') {
+                        enteredText = "Click to add description.";
+                        $(this).addClass('empty-field');
+                    } else {
+                        $(this).removeClass('empty-field');
+                        Confluence.Roadmap.Analytics.addDescription();
+                    }
+
+                    // return the value that will be shown out after editing
+                    return AJS.escapeHtml(enteredText).replace(/\r?\n/g, '<br />');
+                },
+                delegate: {
+                    willOpenEditInPlace: function () { // return the value that will be shown in inlineEdit
+                        me.refresh();
+                        fields.$description.find('.textarea').attr('maxlength', Roadmap.BarDialog.MAX_LENGTH_DESCRIPTION); // set maxlength for model browser
+                        return me.model.attributes.description.replace(/<br\s*[\/]?>/gi, '\n');
+                    }
+                }
+            });
+            editInplaceOption.description && fields.$description.editInPlace(descriptionOption);
+
+            // Setup Page Link
+            var pageLinkOption = $.extend(true, {}, defaultOption, {
+                pageLinkHTML: Confluence.Templates.Roadmap.buildPageLink({
+                    pageLink: this.model.attributes.pageLink,
+                    isEditMode: this.options.renderOption.isEditMode
+                }),
+                isEditMode: this.options.renderOption.isEditMode,
+                isAutoCompleteField: true,
+                show_buttons: false,
+                default_text: '',
+                field_extra_classes: ['text', 'autocomplete-confluence-content'],
+                delegate: {
+                    willOpenEditInPlace: me._onPageLinkOpen,
+                    didCloseEditInPlace: function () {
+                        //hack! when input text is in empty text, there are some cases press enter button do not fire the callback,
+                        //therefore the status do not be updated correctly
+                        if (_.isEmpty(fields.$pageLink.data('linkData'))) {
+                            fields.$pageLink.hide();
+                            fields.$pageLinkNew.show();
+                            fields.$pageLinkUpdate.show();
+                        }
+                    }
+                },
+                on_blur: null,
+                callback: me._onPageLinkCallback
+            });
+            editInplaceOption.pageLink && this.options.dialogOptions.linkPageEditable &&
+            this.fields.$pageLink.editInPlace(pageLinkOption);
+        },
+
+        _onPageLinkOpen: function (aDOMNode) {
+            var me = this;
+            aDOMNode.append('<div class="link-page-dropdown" />'); // dropdown list will be rendered here
+            var $searchInput = aDOMNode.find('.autocomplete-confluence-content');
+            $searchInput.attr({
+                placeholder: "Search page",
+                'data-dropdown-target': '#inline-dialog-roadmap-dialog .link-page-dropdown',
+                'data-none-message': "No matches found"
+            });
+
+            Confluence.Binder.autocompleteConfluenceContent(aDOMNode);
+            $searchInput.bind("selected.autocomplete-content", this._onPageLinkSelectCompleted);
+
+            // This blur event will prevent autocomplete field and editinplace edit at the same time
+            $searchInput.on('blur', function () {
+                setTimeout(me._onPageLinkBlur, 150);
+            });
+
+            var pageLink = this.model.attributes.pageLink;
+            this.fields.$pageLink.data('linkData', pageLink);
+            if (!_.isEmpty(pageLink)) {
+                return pageLink.title; // return current page's title
+            }
+            return true; // return as new search
+        },
+
+        _onPageLinkSelectCompleted: function (event, data) {
+            event.stopPropagation();
+
+            var $searchInput = this.fields.$pageLink.find('.autocomplete-confluence-content');
+            var linkObj = data.content;
+            $searchInput.val(linkObj.title);
+            this.fields.$pageLink.data('linkData', data.content);
+
+            _.defer(this._onPageLinkBlur);
+        },
+
+        _onPageLinkBlur: function () {
+            var $searchInput = this.fields.$pageLink.find('.autocomplete-confluence-content');
+            var e = $.Event('keyup');
+            e.which = AJS.keyCode.ENTER;
+            $searchInput.trigger(e);
+        },
+
+        _onPageLinkCallback: function (elementId, enteredText) {
+            var linkData = (enteredText === '') ? {} : this.fields.$pageLink.data('linkData');
+            return this._updatePageLink(linkData);
+        },
+
+        _updatePageLink: function (linkData) {
+            if (linkData.id === this.model.attributes.pageLink.id) {
+                return;
+            }
+
+            var fields = this.fields;
+            //old linked page ID != new linked page ID
+            if (_.isEmpty(linkData)) {
+                this.options.updatePageLink({});
+                fields.$pageLink.hide();
+                fields.$pageLinkNew.show();
+                fields.$pageLinkUpdate.show();
+                return "No linked page";
+            } else {
+                var pageLinkObj = _.pick(linkData, 'id', 'title', 'type', 'spaceKey', 'wikiLink');
+                //detect link data come from 'existing link' , it comes from different format
+                if (!linkData.spaceKey) {
+                    pageLinkObj['spaceKey'] = linkData.space.key;
+                }
+                this.options.updatePageLink(pageLinkObj);
+                fields.$pageLink.show();
+                fields.$pageLinkNew.hide();
+                fields.$pageLinkUpdate.hide();
+
+                const sanitizedId = linkData.id ? {id: this._escapeString(linkData.id)} : {};
+                // We should be getting back clean data since it was just returned from the BE but sanitizing just in case
+                Object.assign(linkData, sanitizedId);
+
+                //CONFDEV-31528
+                if (this.options.renderOption.isEditMode) {
+                    Confluence.Roadmap.Analytics.addPageLinkEditMode({
+                        linkedPageId: linkData.id,
+                        pageId: AJS.Meta.get('page-id') > 0 ? AJS.Meta.get('page-id') : AJS.Meta.get('draft-id'),
+                        isDraft: AJS.Meta.get('page-id') <= 0
+                    });
+                } else {
+                    //blog list doesn't have pageId, we take its URL
+                    Confluence.Roadmap.Analytics.addPageLinkViewMode({
+                        linkedPageId: linkData.id,
+                        pageId: AJS.Meta.get('page-id')
+                    });
+                }
+
+                return Confluence.Templates.Roadmap.buildPageLink({
+                    pageLink: linkData,
+                    isEditMode: this.options.renderOption.isEditMode
+                });
+            }
+        },
+
+        _addEvents: function () {
+            // This code bellow will handler limiting max length in for browser which doesn't support maxlength (IE<=9)
+            if ($.browser.msie && parseInt($.browser.version, 10) <= 9) {
+                var checkLength = function (e, maxLength) {
+                    if (e.ctrlKey || e.altKey || e.metaKey || e.keyCode === AJS.keyCode.BACKSPACE || e.keyCode === AJS.keyCode.DELETE) {
+                        return true;
+                    }
+                    var value = $.trim(this.value);
+
+                    return value.length <= maxLength;
+                };
+
+                // Keypress
+                this.fields.$description.on('keypress', '.textarea', function (e) {
+                    return checkLength.call(this, e, Roadmap.BarDialog.MAX_LENGTH_DESCRIPTION);
+                });
+                // Paste
+                this.fields.$description.on('paste', '.textarea', function (e) {
+                    var me = this;
+                    setTimeout(function () {
+                        if (checkLength.call(me, e, Roadmap.BarDialog.MAX_LENGTH_DESCRIPTION)) {
+                            me.value = me.value.substr(0, Roadmap.BarDialog.MAX_LENGTH_DESCRIPTION);
+                        }
+                    }, 0);
+                });
+            }
+        },
+
+        _onDeleteClick: function () {
+            this.options.deleteBar();
+            this.remove();
+        },
+
+        _goToCreateLinkPage: function (event) {
+            var dialogOptions = this.options.dialogOptions;
+            if (dialogOptions.createLinkPageCallback) {
+                var createLinkPageCallback = _.bind(dialogOptions.createLinkPageCallback, {me: this}, event);
+                createLinkPageCallback();
+            }
+        },
+
+        _goToUpdateLinkPage: function (event) {
+            event.preventDefault();
+            this.fields.$pageLink.show();
+            this.fields.$pageLinkNew.hide();
+            this.fields.$pageLinkUpdate.hide();
+            this.fields.$pageLink.click();
+        }
+    });
+})(AJS.$, window._);
+
+}catch(e){WRMCB(e)};
+;
+try {
+/* module-key = 'com.atlassian.confluence.plugins.confluence-roadmap-plugin:roadmap-bar-dialog-resources', location = 'view/roadmap-editor/bar-dialog/bar-link-new-page.js' */
+Confluence.RoadmapLink = (function ($, _) {
+    Roadmap.trackingBars = [];
+
+    /**
+     *  linkParam = {
+     *   id: roadmapData.id,
+     *   roadmapHash: roadmapData.hash,
+     *   version: roadmapData.version,
+     *   roadmapBarId: this.options.bar.id
+            }
+     */
+    function goToCreateLinkPage(linkParam, callback) {
+        // this param decide the parent page after creating a page.
+        // Work: 'Blank-page', 'Decision', 'Meeting notes', 'Retrospective', 'Troubleshooting article', 'Product requirement', etc...
+        // not work: 'How-to-article', 'File list', 'JIRA report' : the param alway be override with null value
+        var pageParam = {};
+        // there is some cases without pageId, (blogpost list),
+        if (parseInt(linkParam.pageId) <= 0) {
+            linkParam.parentPageId = AJS.Meta.get('parent-page-id');
+        }
+
+        var barParamContext = $.param(linkParam);
+        window.open(AJS.contextPath() + '/plugins/roadmap/create-page.action?' + barParamContext, '_blank');
+
+        putLinkToPending(linkParam.roadmapBarId).done(function (data) {
+            Roadmap.trackingBars.push(linkParam.roadmapBarId);
+        });
+
+        $(window).off('focus');
+        $(window).on('focus', function () {
+            if (!Roadmap.trackingBars.length) {
+                $(window).off('focus');
+            }
+            _.each(Roadmap.trackingBars, function (barId) {
+                checkRedeem(barId)
+                    .done(function (data) {
+                        var linkStatus = data.status;
+                        if (linkStatus == 'REDEEM') {
+                            removeTracking(barId);
+                            callback({
+                                barId: barId,
+                                pageLink: $.parseJSON(data.pageLink)
+                            });
+                        } else if (linkStatus == 'UNKNOWN') {
+                            removeTracking(barId);
+                        }
+                        //do nothing with PENDING
+                    });
+            });
+        });
+    }
+
+    function removeTracking(barId) {
+        Roadmap.trackingBars.splice(Roadmap.trackingBars.indexOf(barId), 1);
+    }
+
+    function putLinkToPending(barId) {
+        return $.ajax({
+            contentType: 'application/json',
+            type: "PUT",
+            url: AJS.contextPath() + "/rest/roadmap/1.0/bar/" + barId + "/PENDING"
+        });
+    }
+
+    function checkRedeem(barId) {
+        return $.ajax({
+            contentType: 'application/json',
+            type: "GET",
+            url: AJS.contextPath() + "/rest/roadmap/1.0/bar/" + barId + "/status"
+        });
+    }
+
+    return {
+        addCreateLinkPageListener: goToCreateLinkPage
+    };
+})(AJS.$, window._);
+
+}catch(e){WRMCB(e)};

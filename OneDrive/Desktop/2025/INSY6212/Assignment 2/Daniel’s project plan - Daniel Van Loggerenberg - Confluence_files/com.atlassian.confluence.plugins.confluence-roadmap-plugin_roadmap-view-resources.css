@@ -1,0 +1,4 @@
+/* module-key = 'com.atlassian.confluence.plugins.confluence-roadmap-plugin:roadmap-view-resources', location = 'view/roadmap-view/roadmap-view.css' */
+.roadmap-macro-view {
+    overflow: auto;
+}

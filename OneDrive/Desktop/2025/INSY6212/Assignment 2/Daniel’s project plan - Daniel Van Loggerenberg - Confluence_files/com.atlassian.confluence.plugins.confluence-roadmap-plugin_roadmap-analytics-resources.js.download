@@ -1,0 +1,94 @@
+WRMCB=function(e){var c=console;if(c&&c.log&&c.error){c.log('Error running batched script.');c.error(e);}}
+;
+try {
+/* module-key = 'com.atlassian.confluence.plugins.confluence-roadmap-plugin:roadmap-analytics-resources', location = 'analytics/roadmap-analytics.js' */
+Confluence.Roadmap = Confluence.Roadmap || {};
+Confluence.Roadmap.Analytics = (function ($, _) {
+    var eventNames = {
+        INSERT: 'confluence.roadmap.insert',
+        CREATE: 'confluence.roadmap.create',
+        EDIT: 'confluence.roadmap.edit',
+        EDIT_ACTIONS: {
+            OPEN_BAR_DIALOG: 'confluence.roadmap.editmode.open_bar_dialog',
+            ADD_DESCRIPTION: 'confluence.roadmap.editmode.add_description',
+            ADD_PAGE_LINK: 'confluence.roadmap.editmode.add_page_link'
+        },
+        VIEW_ACTIONS: {
+            OPEN_BAR_DIALOG: 'confluence.roadmap.viewmode.open_bar_dialog',
+            CLICK_PAGE_LINK: 'confluence.roadmap.viewmode.click_page_link',
+            ADD_PAGE_LINK: 'confluence.roadmap.viewmode.add_page_link'
+        }
+    };
+
+    function triggerEvent(name, data) {
+        AJS.trigger('analytics', {name: name, data: data});
+    }
+
+    function getAnalyticData(roadmap) {
+        var barCount = 0;
+        _.each(roadmap.lanes, function (lane) {
+            barCount = barCount + lane.bars.length;
+        });
+        return {
+            lanes: roadmap.lanes.length,
+            bars: barCount,
+            markers: roadmap.markers.length,
+            months: Confluence.Roadmap.DateUtilities.getNumberOfMonths(roadmap.timeline.startDate, roadmap.timeline.endDate) + 1
+        }
+    }
+
+    function insertRoadmap() {
+        triggerEvent(eventNames.INSERT);
+    }
+
+    function createRoadmap(roadmap) {
+        var data = getAnalyticData(roadmap);
+        triggerEvent(eventNames.CREATE, data);
+    }
+
+    function editRoadmap(roadmap) {
+        var data = getAnalyticData(roadmap);
+        triggerEvent(eventNames.EDIT, data);
+    }
+
+    function openBarDialogInEdit() {
+        triggerEvent(eventNames.EDIT_ACTIONS.OPEN_BAR_DIALOG);
+    }
+
+    function openBarDialogInView() {
+        triggerEvent(eventNames.VIEW_ACTIONS.OPEN_BAR_DIALOG);
+    }
+
+    function clickPageLink() {
+        triggerEvent(eventNames.VIEW_ACTIONS.CLICK_PAGE_LINK);
+    }
+
+    function addDescription() {
+        triggerEvent(eventNames.EDIT_ACTIONS.ADD_DESCRIPTION);
+    }
+
+    function addPageLinkEditMode(data) {
+        triggerEvent(eventNames.EDIT_ACTIONS.ADD_PAGE_LINK, data);
+    }
+
+    function addPageLinkViewMode(data) {
+        triggerEvent(eventNames.VIEW_ACTIONS.ADD_PAGE_LINK, data);
+    }
+
+    return {
+        insertRoadmap: insertRoadmap,
+        createRoadmap: createRoadmap,
+        editRoadmap: editRoadmap,
+
+        openBarDialogInEdit: openBarDialogInEdit,
+        addDescription: addDescription,
+        addPageLinkEditMode: addPageLinkEditMode,
+        addPageLinkViewMode: addPageLinkViewMode,
+
+        openBarDialogInView: openBarDialogInView,
+        clickPageLink: clickPageLink
+    }
+
+})(AJS.$, window._);
+
+}catch(e){WRMCB(e)};

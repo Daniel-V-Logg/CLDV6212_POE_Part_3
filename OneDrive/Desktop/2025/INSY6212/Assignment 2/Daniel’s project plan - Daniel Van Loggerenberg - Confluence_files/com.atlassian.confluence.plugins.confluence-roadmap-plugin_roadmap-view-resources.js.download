@@ -1,0 +1,139 @@
+WRMCB=function(e){var c=console;if(c&&c.log&&c.error){c.log('Error running batched script.');c.error(e);}}
+;
+try {
+/* module-key = 'com.atlassian.confluence.plugins.confluence-roadmap-plugin:roadmap-view-resources', location = 'view/roadmap-view/roadmap-view.js' */
+define('confluence/confluence-roadmap-plugin/view/roadmap-view/roadmap-view', [
+    'jquery',
+    'ajs',
+    'confluence/legacy',
+    'skate'
+], function (
+    $,
+    AJS,
+    Confluence,
+    skate
+) {
+    var Roadmap = window.Roadmap = window.Roadmap || {};
+    Roadmap.RoadmapView = $.extend(Roadmap.RoadmapView || {}, {
+        showBarDialog: function (event, bar) {
+            this._barDialog && this._barDialog.remove();
+            var roadmapData = $(event.target).parents('.roadmap-macro-view').data('roadmap-macro-view');
+
+            this._barDialog = new Roadmap.BarDialogView({
+                trigger: $(event.target),
+                model: {attributes: bar},
+                timelineWidth: $(event.target).parent('.svg-bar-overlay').width(),
+                renderOption: {
+                    isEditMode: false,
+                    editInplace: {
+                        title: false,
+                        pageLink: true,
+                        description: false
+                    }
+                },
+                linkPageEditable: roadmapData.canUserEditPage,
+                createLinkPageCallback: this._goToCreateLinkPage,
+                updatePageLink: this._updatePageLink
+            });
+
+            this._barDialog.show();
+        },
+
+        _goToCreateLinkPage: function (event) {
+            event.preventDefault();
+            var me = this.me;
+            var $barDiv = $(me.options.trigger);
+            var roadmapData = $barDiv.parents('.roadmap-macro-view').data('roadmap-macro-view');
+            var linkParam = {
+                roadmapHash: roadmapData.hash,
+                version: roadmapData.version,
+                roadmapBarId: me.options.model.attributes.id,
+                roadmapContentId: roadmapData.id,
+                updateRoadmap: true
+            };
+
+            Confluence.RoadmapLink.addCreateLinkPageListener(linkParam, function (barDetail) {
+                var $element = $('.bar-title[data-roadmap-bar*="' + barDetail.barId + '"]');
+                var $currentRoadmapData = $element.data('roadmap-bar');
+                $currentRoadmapData['pageLink'] = barDetail.pageLink;
+                $element.attr('data-roadmap-bar', JSON.stringify($currentRoadmapData));
+                $element.data('roadmap-bar', $currentRoadmapData);
+                if ($barDiv.data('roadmap-bar').id == barDetail.barId) {
+                    $barDiv.trigger('click'); //only display the last opened dialog
+                }
+
+                //CONFDEV-31528
+                Confluence.Roadmap.Analytics.addPageLinkViewMode({
+                    linkedPageId: barDetail.pageLink.id,
+                    pageId: AJS.Meta.get('page-id')
+                });
+            });
+        },
+
+        _updatePageLink: function (pageLink) {
+            var me = this;
+            var roadmapData = $(this.trigger).closest('.roadmap-macro-view').data('roadmap-macro-view');
+            var postUrl;
+            var postData = {
+                roadmapContentId: roadmapData.id,
+                roadmapHash: roadmapData.hash,
+                version: roadmapData.version,
+                roadmapBarId: this.model.attributes.id,
+                updateRoadmap: true
+            };
+
+            if ($.isEmptyObject(pageLink)) {
+                postUrl = AJS.contextPath() + "/rest/roadmap/1.0/bar/pagelink/reset";
+            } else {
+                postUrl = AJS.contextPath() + "/rest/roadmap/1.0/bar/pagelink/dolink";
+                postData = $.extend({}, postData, {linkedPageId: pageLink.id});
+            }
+
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: postUrl,
+                data: JSON.stringify(postData),
+                success: function (result) {
+                    me.model.attributes.pageLink = pageLink;
+                },
+                error: function (error) {
+                    AJS.log(error);
+                }
+            });
+        }
+    });
+
+    return {
+        _isInited: false,
+
+        init: function () {
+            if (this._isInited) {
+                return;
+            }
+            this._isInited = true;
+
+            skate('roadmap-macro-view', {
+                type: skate.types.CLASS,
+
+                events: {
+                    'click .bar-title': function (el, event, currentTarget) {
+                        var $elBar = $(currentTarget);
+                        event.target = currentTarget;
+                        var barJsonData = $elBar.data('roadmap-bar');
+
+                        Roadmap.RoadmapView.showBarDialog(event, barJsonData);
+                        Confluence.Roadmap.Analytics.openBarDialogInView();
+                    }
+                }
+            });
+        }
+    };
+});
+
+
+require('confluence/module-exporter').safeRequire('confluence/confluence-roadmap-plugin/view/roadmap-view/roadmap-view', function (roadMapView) {
+    roadMapView.init();
+});
+
+}catch(e){WRMCB(e)};

@@ -1,0 +1,283 @@
+/* module-key = 'com.atlassian.confluence.plugins.confluence-roadmap-plugin:roadmap-dialog-resources', location = 'view/roadmap-dialog.css' */
+#inline-dialog-roadmap-dialog {
+    z-index: 3050;
+}
+
+#inline-dialog-roadmap-dialog .contents .aui-button {
+    margin-left: 0;
+}
+
+#inline-dialog-roadmap-dialog > div.contents .aui-button.rename-button {
+    margin-left: 7px;
+}
+
+#inline-dialog-roadmap-dialog .aui-button.aui-button-compact {
+    padding: 2px 5px;
+}
+
+#inline-dialog-roadmap-dialog .contents {
+    padding: 4px;
+    overflow: visible;
+}
+
+#inline-dialog-roadmap-dialog .aui-iconfont-remove:before {
+    margin-left: 1px;
+}
+
+#lane-color-picker {
+    z-index: 4012;
+}
+
+#inline-dialog-roadmap-dialog .color-item {
+    width: 19px;
+    height: 19px;
+    border-radius: 3px;
+    border: 1px solid var(--ds-border-input, #f2f2f2);
+    display: block;
+}
+
+#inline-dialog-roadmap-dialog .inner {
+    padding: 0px 12px 10px 12px;
+}
+
+#inline-dialog-roadmap-dialog .inner-item {
+    margin-top: 12px;
+}
+
+#inline-dialog-roadmap-dialog .separate-line {
+    margin: 0;
+}
+
+#inline-dialog-roadmap-dialog .editable-field {
+    margin: 5px 10px;
+    padding: 3px;
+    border: 1px solid transparent;
+    word-wrap: break-word;
+    position: relative;
+    line-height: 20px;
+    padding-right: 20px;
+}
+
+#inline-dialog-roadmap-dialog .editable-field.editable-field-hover {
+    border-color: var(--ds-border, #ccc);
+}
+
+#inline-dialog-roadmap-dialog .editable-field-hover.aui-icon-small.aui-iconfont-edit {
+    width: auto;
+    height: auto;
+    padding-bottom: 3px;
+}
+
+#inline-dialog-roadmap-dialog .editable-field-hover.aui-icon-small.aui-iconfont-edit:before {
+    position: absolute;
+    top: 13px;
+    left: auto;
+    right: 5px;
+}
+
+#inline-dialog-roadmap-dialog .empty-field {
+    font-style: italic;
+    color: var(--ds-text-subtlest, #707070);
+}
+
+#inline-dialog-roadmap-dialog .inline-edit-buttons {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 1;
+
+    background-color: var(--ds-background-accent-gray-subtlest, #F0F0F0);
+    padding: 2px;
+    border: 1px solid var(--ds-border, #ccc);
+
+    border-radius: 0 0 3px 3px;
+    box-shadow: var(--ds-shadow-overlay, 0 3px 6px rgba(111, 111, 111, 0.2));
+}
+
+#inline-dialog-roadmap-dialog .inplace_field {
+    max-width: 360px;
+}
+
+#inline-dialog-roadmap-dialog .inplace_field.textarea {
+    height: 100px;
+    resize: none;
+}
+
+#inline-dialog-roadmap-dialog .bar-description,
+#inline-dialog-roadmap-dialog .bar-page-link,
+#inline-dialog-roadmap-dialog #bar-title {
+    margin-top: 10px;
+}
+
+#inline-dialog-roadmap-dialog #bar-title.editInPlace-active,
+#inline-dialog-roadmap-dialog .editable-field.editInPlace-active {
+    padding: 0;
+}
+
+#inline-dialog-roadmap-dialog .inline-edit-buttons .inplace_cancel {
+    margin-left: 2px;
+}
+
+#inline-dialog-roadmap-dialog .aui-iconfont-success,
+#inline-dialog-roadmap-dialog .inplace_cancel {
+    color: var(--ds-text-subtlest, #707070);
+}
+
+#inline-dialog-roadmap-dialog button:hover .aui-iconfont-success,
+#inline-dialog-roadmap-dialog button:hover .aui-iconfont-edit,
+#inline-dialog-roadmap-dialog button:hover .aui-iconfont-delete,
+#inline-dialog-roadmap-dialog button:hover .aui-iconfont-add,
+#inline-dialog-roadmap-dialog .inplace_cancel:hover {
+    color: var(--ds-text, #333);
+}
+
+#inline-dialog-roadmap-dialog .aui-button[disabled] .aui-iconfont-success {
+    color: var(--ds-text-disabled, #999);
+}
+
+/* hide input clear button in IE */
+#inline-dialog-roadmap-dialog input::-ms-clear {
+    display: none;
+}
+
+#inline-dialog-roadmap-dialog .information {
+    margin-top: 10px;
+}
+
+#inline-dialog-roadmap-dialog .inplace_form.aui {
+    display: block !important;
+}
+
+#inline-dialog-roadmap-dialog .bar-description .inplace_form.aui {
+    height: 100px !important;
+}
+
+#inline-dialog-roadmap-dialog .bar-page-link-wrapper {
+    line-height: 12px;
+}
+
+#inline-dialog-roadmap-dialog .bar-page-link-wrapper .hidden-field {
+    display: none;
+}
+
+#inline-dialog-roadmap-dialog .link-update-page {
+    float: left;
+    margin: 9px 0px 9px 15px;
+}
+
+#inline-dialog-roadmap-dialog .link-new-page {
+    float: left;
+    margin-right: 10px;
+    margin-top: 9px;
+}
+
+#inline-dialog-roadmap-dialog .page-link-separator {
+    content: '•'; /* middot */
+    padding: 0 5px;
+}
+
+#inline-dialog-roadmap-dialog .bar-page-link .link-page-title {
+    padding-left: 20px;
+}
+
+#inline-dialog-roadmap-dialog .link-page-dropdown {
+    overflow: visible;
+    position: absolute;
+    width: 100%;
+}
+
+#inline-dialog-roadmap-dialog .bar-page-link .aui-dropdown {
+    width: 99%;
+}
+
+/*CONF-41451*/
+#confluence-roadmap-dialog .aui-dialog2-content {
+    padding: 0px;
+    height: auto;
+}
+
+.roadmap-editor-popup {
+    overflow: auto;
+}
+
+/*
+    Overrides that will be unnecessary once we switch to a tokenized AUI
+
+    These would be better placed in the aui-overrides.css file; however, they
+    wouldn't take effect because that's loaded with lower priority than
+    the defaults. Some rules could be activitated by contriving greater
+    specificity, but that's not possible everywhere.
+*/
+
+.aui-dialog2-header, .aui-dialog2-footer {
+    background-color: var(--ds-surface, #f5f5f5);
+}
+
+.aui-dialog2-header {
+    border-bottom: 1px solid var(--ds-border, #ccc);
+}
+
+.aui-dialog2-footer {
+    border-top: 1px solid var(--ds-border, #ccc);
+}
+
+aui-inline-dialog .aui-inline-dialog-arrow.aui-css-arrow::after,.aui-inline-dialog .aui-inline-dialog-arrow.aui-css-arrow::after,aui-inline-dialog .arrow.aui-css-arrow::after,.aui-inline-dialog .arrow.aui-css-arrow::after,aui-inline-dialog .aui-inline-dialog-arrow.aui-css-arrow::before,.aui-inline-dialog .aui-inline-dialog-arrow.aui-css-arrow::before,aui-inline-dialog .arrow.aui-css-arrow::before,.aui-inline-dialog .arrow.aui-css-arrow::before {
+    border-color: var(--ds-border, #ccc) transparent;
+}
+
+aui-inline-dialog .aui-inline-dialog-contents,.aui-inline-dialog .aui-inline-dialog-contents,aui-inline-dialog .contents,.aui-inline-dialog .contents {
+    background: var(--ds-surface-overlay, #fff);
+    border: 1px solid var(--ds-border, #ccc);
+    box-shadow: var(--ds-shadow-overlay, 0 3px 6px rgba(0,0,0,0.2));
+}
+
+aui-inline-dialog .aui-inline-dialog-arrow.aui-css-arrow.aui-left-arrow:after,.aui-inline-dialog .aui-inline-dialog-arrow.aui-css-arrow.aui-left-arrow:after,aui-inline-dialog .arrow.aui-css-arrow.aui-left-arrow:after,.aui-inline-dialog .arrow.aui-css-arrow.aui-left-arrow:after,aui-inline-dialog .aui-inline-dialog-arrow.aui-css-arrow.aui-left-arrow:before,.aui-inline-dialog .aui-inline-dialog-arrow.aui-css-arrow.aui-left-arrow:before,aui-inline-dialog .arrow.aui-css-arrow.aui-left-arrow:before,.aui-inline-dialog .arrow.aui-css-arrow.aui-left-arrow:before {
+    border-color: transparent var(--ds-border, #ccc);
+}
+
+aui-inline-dialog .aui-inline-dialog-arrow.aui-css-arrow.aui-left-arrow:after, .aui-inline-dialog .aui-inline-dialog-arrow.aui-css-arrow.aui-left-arrow:after, aui-inline-dialog .arrow.aui-css-arrow.aui-left-arrow:after, .aui-inline-dialog .arrow.aui-css-arrow.aui-left-arrow:after {
+    border-color: transparent var(--ds-surface-overlay, #fff) transparent transparent;
+}
+
+.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar tbody {
+    background-color: var(--ds-surface-overlay, #fff);
+}
+
+.aui-datepicker-dialog .ui-datepicker .ui-datepicker-other-month.ui-datepicker-unselectable {
+    background-color: var(--ds-surface-overlay, #fff);
+}
+
+.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td a {
+    background: var(--ds-surface-overlay, #fff);
+    color: var(--ds-text, #3572b0);
+}
+
+.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar thead {
+    background: var(--ds-background-accent-gray-subtlest, #f5f5f5);
+}
+
+.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar th {
+    color: var(--ds-text-subtle, #707070);
+}
+
+.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar .ui-datepicker-current-day a {
+    background: var(--ds-background-selected-bold, #3572b0);
+    color: var(--ds-text-inverse, #fff);
+}
+
+.aui-inline-dialog.aui-datepicker-dialog .hasDatepicker .ui-widget-header {
+    background: var(--ds-background-accent-gray-subtlest,#f5f5f5);
+}
+
+.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td a:hover, .aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td a:active, .aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td a:focus {
+    background-color: var(--ds-surface-overlay-hovered,#f5f5f5);
+    box-shadow: 0px 0px 0pt 1pt var(--ds-border-focused, #ccc);
+}
+
+.aui-datepicker-dialog .ui-datepicker .ui-datepicker-title {
+    color: var(--ds-text, #333);
+}
+
+.aui-datepicker-dialog .aui-inline-dialog-arrow.aui-css-arrow:not(.aui-bottom-arrow):after, .aui-datepicker-dialog .arrow.aui-css-arrow:not(.aui-bottom-arrow):after {
+    border-bottom-color: var(--ds-background-accent-gray-subtlest, #f5f5f5);
+}
